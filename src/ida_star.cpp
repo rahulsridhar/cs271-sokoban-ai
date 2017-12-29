@@ -61,7 +61,6 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 		{
 			State_Space *traverse = new State_Space;
 			traverse = goal;
-			//goal->current.print();		
 			// Get the set of moves from goal to initial state
 			while(traverse->parent != NULL)
 			{
@@ -75,7 +74,7 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 			return path_to_goal; 
 		}
 		
-		if(result == UINT_MAX) // Not found a solution
+		if(result == UINT_MAX)    // Not found a solution
 		{
 			path_to_goal.clear(); // Return empty vector of moves
 			return path_to_goal;
@@ -90,16 +89,12 @@ std::vector<Action> ida_star::ida_begin(State &root, Problem &test_problem, Assi
 unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_problem, Heuristic &heur)
 {
 	// Calculate f value of the state
-	//unsigned int f = g + h(state->current, g); // Naive heuristic
+	//unsigned int f = g + h(state->current, g);          // Naive heuristic
 	//unsigned int f = g + heur.evaluate(state->current); // Manhattan heuristic
-	unsigned int f = g + heur.manhattan_dist_score(state->current);
 	//unsigned int f = g; // UCS
+    unsigned int f = g + heur.manhattan_dist_score(state->current);
  	num_states++;
-	//std::cout<<std::endl<<"Heuristic in search = "<<heur.manhattan_dist_score(state->current)<<"; f = "<<f<<std::endl;
-	// Return f if f value is > cutoff bound
-	//state->currentprint();
-	//std::cout<<std::endl;		
-	//std::cout<<"Hashing value= "<<sh(state->current)<<std::endl;
+	
 
 	if(f > bound)
 		return f;
@@ -111,7 +106,6 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 	unsigned int min = UINT_MAX, temp_result;
 
 	// Generate successors of current state
-	//State_Space *next = new State_Space;
 	
 	std::vector<Action> actions = test_problem.valid_actions(&state->current);
 	//if(actions.empty())
@@ -119,7 +113,7 @@ unsigned int ida_star::search(State_Space *state, unsigned int g, Problem &test_
 
 	for(std::vector<Action>::iterator it = actions.begin(); it!=actions.end(); ++it)
         {
-                // Get and store the successors of current state
+        // Get and store the successors of current state
 		State_Space *next = new State_Space;
                 const State &s = test_problem.result(&state->current, *it);
                 next->current = s;

@@ -31,17 +31,14 @@ AStar::AStar()
 std::vector<Action> AStar::a_star_begin(State &root, Problem &test_problem, AssignmentSolver &solver)
 {
 	unsigned int result, fnew=0, g=0;
-	//Heuristic heur(&root, &solver);
 	SimpleManhattanDist heur(&solver);
 	// Assign values to the initial state of the state space
 	init_state->current = root;
 	init_state->parent_to_curr = static_cast <Action> (-1);
 	init_state->parent = NULL;
-	//init_state->f = heur.manhattan_dist_score(init_state->current);
 	unsigned int heuristic_val = heur.evaluate(init_state->current);
 	init_state->f = heuristic_val;
 	std::list<State_Space> visiting;	
-	//visited[init_state->current] = heur.manhattan_dist_score(init_state->current);
 	visited[init_state->current] = heuristic_val;
 	std::vector<State_Space> frontier;
 	frontier.push_back(*init_state);
@@ -58,9 +55,7 @@ std::vector<Action> AStar::a_star_begin(State &root, Problem &test_problem, Assi
 		std::pop_heap(frontier.begin(), frontier.end(), CompareState()); 
 		frontier.pop_back();
 
-		//std::cout<<std::endl<<"Current state: "<<std::endl;
-		//temp.current.print();
-
+		
  		if(test_problem.goal_test(&temp.current))
         	{
 			std::cout<<"Reached the goal "<<std::endl;
@@ -86,17 +81,13 @@ std::vector<Action> AStar::a_star_begin(State &root, Problem &test_problem, Assi
 			State_Space* next = new State_Space;
 		
 			// Get and store the successors of current state
-	                const State &s = test_problem.result(&temp.current, *it);
+            const State &s = test_problem.result(&temp.current, *it);
 			next->current = s;
         	        next->parent_to_curr = *it;
 			next->parent = &(visiting.back());
-	 	        //fnew = g + 1 + heur.manhattan_dist_score(next->current);
-			fnew = g + 1 + heur.evaluate(next->current);
-			//fnew = heur.manhattan_dist_score(next->current);
+            fnew = g + 1 + heur.evaluate(next->current);
 			next->f = fnew;
-	      		//std::cout << "Visiting - child" << *it <<std::endl;
-        	        //(next->current).print();
-			
+	      	
 			// Check if state has been visited before (and whether visited at a lower cost)
 			if (!visited.count(next->current) || fnew < visited[next->current]) 
 			{
